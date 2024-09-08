@@ -5,6 +5,7 @@ package com.airbnb.bnb.Service;
 import com.airbnb.bnb.Entity.AppUser;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,11 @@ public class JWTService {
     @Value("${jwt.algorithms.key}")
     private String algorithmsKey;
     @Value("${jwt.issuer}")
-    private String issuer;
+    private static String issuer;
     @Value("${jwt.expiry.duration}")
     private int  expiryTime;
-    private Algorithm algorithm;
+    private static Algorithm algorithm;
+    private static final String USER_NAME="username";
 
 
     @PostConstruct    // work on header part of the token
@@ -33,11 +35,17 @@ public class JWTService {
     }
     public String generateToken(AppUser user){
               return JWT.create()
-                        .withClaim("username", user.getUsername())  //this information is goes to paylod of data
+                        .withClaim(USER_NAME, user.getUsername())  //this information is goes to paylod of data
                         .withExpiresAt(new Date(System.currentTimeMillis()+expiryTime))//
                         .withIssuer(issuer) //who is issuing this detail
                         .sign(algorithm); // which algorithm is used
 
+    }
+    public static String getUserName(String token){
+        DecodedJWT decodedJwt= JWT.require(algorithm).
+                withIssuer(issuer).build().verify(token);
+        return decodedJwt.getClaim(USER_NAME).asString();
+        // get username from token
     }
 
 
