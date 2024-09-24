@@ -3,6 +3,7 @@ package com.airbnb.bnb.Service;
 import com.airbnb.bnb.Entity.AppUser;
 import com.airbnb.bnb.Repository.AppUserRepository;
 import com.airbnb.bnb.payload.LoginDto;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,12 @@ import java.util.Optional;
 public class AppUserServiceimpl {
     private AppUserRepository appUserRepository;
     private JWTService jwTService;
-   @Autowired
+
     public AppUserServiceimpl(AppUserRepository appUserRepository , JWTService jwTService) {
        this.appUserRepository = appUserRepository;
        this.jwTService = jwTService;
     }
+
     public  AppUser createUser(
             AppUser user
     ){

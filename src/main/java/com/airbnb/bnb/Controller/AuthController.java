@@ -24,20 +24,17 @@ public class AuthController {
         this.appUserService = appUserService;
     }
 
-@PostMapping
+@PostMapping("/createuser")
     public ResponseEntity<AppUser> create(
             @RequestBody AppUser user) {
-        Optional<AppUser> opEmail = appUserRepository.findByEmail(user.getEmail());
-        if (opEmail.isPresent()) {
-            throw new UserExists("Email Id Exists");
-        }
+
         Optional<AppUser> opUserName = appUserRepository.findByUsernameOrEmail(user.getUsername(),user.getEmail());
         if (opUserName.isPresent()) {
             throw new UserExists("Username Exists");
         }
+        user.setRole("ROLE_USER");
         AppUser savedUser =appUserService.createUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-
     }
     @PostMapping("/login")
     public ResponseEntity<?> signIn(
@@ -54,6 +51,11 @@ public class AuthController {
             return new ResponseEntity<>("Invalid Credentials", HttpStatus.UNAUTHORIZED);
         }
     }
+    @PostMapping("/createpropertyuser")
+    public String createpropertyuser(){
+        return "created";
+
     }
+}
 
 
