@@ -20,11 +20,8 @@ private CountryRepository countryRepository;
     public PropertyServiceImpl(PropertyRepository propertyRepository, CityRepository cityRepository, CountryRepository countryRepository) {
         this.propertyRepository = propertyRepository;
         this.cityRepository = cityRepository;
-
         this.countryRepository = countryRepository;
     }
-
-
 
     @Override
     public Property CreateProperty(Property property, long city_id, long country_id) {
@@ -32,7 +29,6 @@ private CountryRepository countryRepository;
         Country country = countryRepository.findById(country_id).get();
         property.setCity(city);
         property.setCountry(country);
-
         Property saveEntity=  propertyRepository.save(property);
         return saveEntity;
     }
